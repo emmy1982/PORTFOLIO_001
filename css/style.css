@@ -76,7 +76,7 @@ body {
 .logo {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--bg-color);
+    color: var(--text-color);
     font-family: 'Anton', sans-serif;
     font-weight: 100;
 }
@@ -412,6 +412,8 @@ body {
     box-shadow: 0 0 50px 0 rgba(255, 255, 255, 0.178);
     opacity: 0.8;
     z-index: 0;
+    animation: circleEntrance 1s ease-out forwards, circleFloat 4s ease-in-out infinite;
+    opacity: 0;
 }
 
 .circle_2 {
@@ -424,6 +426,9 @@ body {
     position: absolute;
     top: 0;
     left: 30px;
+    animation: circleEntrance 1s ease-out forwards, circleFloat 4s ease-in-out infinite;
+    opacity: 0;
+    animation-delay: 0.2s, 1.2s;
 }
 
 .circle_3 {
@@ -436,6 +441,9 @@ body {
     position: absolute;
     top: 0;
     left: 60px;
+    animation: circleEntrance 1s ease-out forwards, circleFloat 4s ease-in-out infinite;
+    opacity: 0;
+    animation-delay: 0.4s, 1.4s;
 }
 
 .circle_4 {
@@ -448,10 +456,15 @@ body {
     position: absolute;
     top: 0;
     left: 90px;
+    animation: circleEntrance 1s ease-out forwards, circleFloat 4s ease-in-out infinite;
+    opacity: 0;
+    animation-delay: 0.6s, 1.6s;
 }
 
 .home {
+    margin: 0 auto;
     height: 100vh;
+    max-width: 1300px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -483,7 +496,7 @@ body {
     text-align: start;
     z-index: 2;
     position: relative;
-    padding: 0 6rem;
+    /* padding: 0 6rem; */
     margin-top: 10%;
     will-change: transform;
     transform: translateZ(0);
@@ -492,6 +505,85 @@ body {
     align-items: start;
     justify-content: center;
     flex-direction: column;
+}
+
+.home-content-2 {
+    width: 100%;
+    max-width: 350px;
+    height: 500px;
+    text-align: start;
+    z-index: 2;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    border-bottom: 1px solid var(--text-color);
+    padding-right: 1rem;
+    margin: 0 auto;
+}
+
+.arrow-call {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around	;
+}
+
+.action-call {
+    width: 100%;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    flex-direction: column;
+    border-bottom: 1px solid var(--text-color);
+    border-top: 1px solid var(--text-color);
+    padding-bottom: 1rem;
+    padding-top: 1.8rem;
+}
+
+.action-call a {
+    width: 100%;
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    letter-spacing: -0.05rem;
+    line-height: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.action-call a img {
+    order: 2;
+    width: 20px;
+    height: 20px;
+}
+
+.action-call a:hover img {
+    transform: translateX(10px);
+    transition: all 0.3s ease-in-out;
+    color: var(--primary-color);
+}
+.action-call a:hover{
+    transform: translateX(10px);
+    transition: all 0.3s ease-in-out;
+    color: var(--primary-color);
+}
+
+
+.subtitle {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 2rem;
+    max-width: 500px;
+    font-weight: 400;
+    text-align:justify;
+    letter-spacing: -0.05rem;
 }
 
 .glitch {
@@ -552,13 +644,6 @@ body {
 .word-item:first-child {
     opacity: 1;
     top: 0;
-}
-
-.subtitle {
-    font-size: 1.5rem;
-    color: var(--text-color);
-    margin-bottom: 2rem;
-    max-width: 600px;
 }
 
 .cta-buttons {
@@ -953,6 +1038,45 @@ section {
 
 body.menu-open .header {
     display: none !important;
+}
+
+/* Animación de entrada para los círculos */
+@keyframes circleEntrance {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) translateX(-100px);
+    }
+    100% {
+        opacity: 0.8;
+        transform: scale(1) translateX(0);
+    }
+}
+
+/* Animación de flotación para los círculos */
+@keyframes circleFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+.circle_1, .circle_2, .circle_3, .circle_4 {
+    animation: circleEntrance 1s ease-out forwards, circleFloat 4s ease-in-out infinite;
+    opacity: 0;
+}
+
+.circle_2 {
+    animation-delay: 0.2s, 1.2s;
+}
+
+.circle_3 {
+    animation-delay: 0.4s, 1.4s;
+}
+
+.circle_4 {
+    animation-delay: 0.6s, 1.6s;
 }
 
  
