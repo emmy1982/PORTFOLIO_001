@@ -14,85 +14,98 @@ waitForGSAP().then(() => {
     gsap.registerPlugin(ScrollTrigger, SplitText);
     console.log('GSAP plugins registrados');
     initAll();
+}).catch(error => {
+    console.error('Error al cargar GSAP:', error);
 });
 
-// Cursor personalizado
+// Cursor personalizado con debounce
 function initCursor() {
     const cursor = document.querySelector('.cursor');
     const cursorFollower = document.querySelector('.cursor-follower');
 
     if (cursor && cursorFollower) {
-        document.addEventListener('mousemove', (e) => {
-            gsap.to(cursor, {
-                x: e.clientX - 5,
-                y: e.clientY - 5,
-                duration: 0.1
+        let rafId;
+        function updateCursor(e) {
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+            }
+            rafId = requestAnimationFrame(() => {
+                gsap.to(cursor, {
+                    x: e.clientX - 5,
+                    y: e.clientY - 5,
+                    duration: 0.1
+                });
+                
+                gsap.to(cursorFollower, {
+                    x: e.clientX - 15,
+                    y: e.clientY - 15,
+                    duration: 0.3
+                });
             });
-            
-            gsap.to(cursorFollower, {
-                x: e.clientX - 15,
-                y: e.clientY - 15,
-                duration: 0.3
-            });
-        });
+        }
 
-        // Efecto hover en enlaces
-        document.querySelectorAll('a, button').forEach(link => {
-            link.addEventListener('mouseenter', () => {
+        document.addEventListener('mousemove', updateCursor, { passive: true });
+
+        // Efecto hover en enlaces con delegación de eventos
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.matches('a, button')) {
                 gsap.to(cursorFollower, {
                     scale: 1.5,
                     duration: 0.3
                 });
-            });
-            
-            link.addEventListener('mouseleave', () => {
+            }
+        }, { passive: true });
+        
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.matches('a, button')) {
                 gsap.to(cursorFollower, {
                     scale: 1,
                     duration: 0.3
                 });
-            });
-        });
+            }
+        }, { passive: true });
     }
 }
 
-// Partículas animadas de fondo
+// Partículas animadas de fondo con optimización
 function createParticlesBG() {
     const canvas = document.getElementById('bg-particles');
+    if (!canvas) return;
     
-    if (!canvas) {
-        console.warn('Canvas de partículas no encontrado');
-        return;
-    }
-    
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-        console.warn('No se pudo obtener el contexto 2D del canvas');
-        return;
-    }
+    const ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
     
     let width = window.innerWidth;
     let height = window.innerHeight;
-    const particles = [];
+    const particles = new Array(50).fill(null).map(() => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 1.5 + 0.5,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5
+    }));
+    
     let animationId;
+    let isVisible = true;
+
+    // Intersection Observer para pausar la animación cuando no es visible
+    const observer = new IntersectionObserver((entries) => {
+        isVisible = entries[0].isIntersecting;
+        if (isVisible) {
+            if (!animationId) animateParticles();
+        } else if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+        }
+    });
+    observer.observe(canvas);
 
     function resizeCanvas() {
         width = window.innerWidth;
         height = window.innerHeight;
         canvas.width = width;
         canvas.height = height;
-    }
-
-    function createParticles() {
-        particles.length = 0;
-        for (let i = 0; i < 100; i++) {
-            particles.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                r: Math.random() * 1.5 + 0.5,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5
-            });
-        }
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
     }
 
     function drawParticles() {
@@ -100,13 +113,8 @@ function createParticlesBG() {
         particles.forEach(p => {
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
             ctx.fill();
-        });
-    }
-
-    function animateParticles() {
-        particles.forEach(p => {
+            
             p.x += p.vx;
             p.y += p.vy;
             
@@ -115,23 +123,38 @@ function createParticlesBG() {
             if (p.y < 0) p.y = height;
             if (p.y > height) p.y = 0;
         });
-        
+    }
+
+    function animateParticles() {
+        if (!isVisible) return;
         drawParticles();
         animationId = requestAnimationFrame(animateParticles);
     }
 
-    resizeCanvas();
-    createParticles();
-    animateParticles();
-    
-    window.addEventListener('resize', () => {
+    const debouncedResize = debounce(() => {
         if (animationId) {
             cancelAnimationFrame(animationId);
         }
         resizeCanvas();
-        createParticles();
         animateParticles();
-    });
+    }, 250);
+
+    resizeCanvas();
+    animateParticles();
+    window.addEventListener('resize', debouncedResize, { passive: true });
+}
+
+// Utilidad de debounce
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
 
 // SplitText
@@ -336,24 +359,58 @@ function initBackToTop() {
     }
 }
 
-// Formulario
+// Validación de formulario mejorada
 function initForm() {
-    const contactForm = document.getElementById('contact-form');
+    const form = document.getElementById('contact-form');
+    if (!form) return;
 
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            gsap.to(contactForm, {
-                y: -20,
-                duration: 0.3,
-                yoyo: true,
-                repeat: 1
-            });
-            
-            contactForm.reset();
+    const validateField = (field) => {
+        const errorElement = field.parentElement.querySelector('.error-message');
+        if (!errorElement) return true;
+
+        let isValid = field.checkValidity();
+        let message = '';
+
+        if (!isValid) {
+            if (field.validity.valueMissing) {
+                message = 'Este campo es requerido';
+            } else if (field.validity.typeMismatch && field.type === 'email') {
+                message = 'Por favor, introduce un email válido';
+            } else if (field.validity.tooShort) {
+                message = `Mínimo ${field.minLength} caracteres`;
+            } else if (field.validity.patternMismatch && field.type === 'text') {
+                message = 'Solo se permiten letras y espacios';
+            }
+        }
+
+        errorElement.textContent = message;
+        field.setAttribute('aria-invalid', !isValid);
+        return isValid;
+    };
+
+    const validateForm = () => {
+        const fields = form.querySelectorAll('input, textarea');
+        let isValid = true;
+        fields.forEach(field => {
+            if (!validateField(field)) {
+                isValid = false;
+            }
         });
-    }
+        return isValid;
+    };
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (validateForm()) {
+            // Aquí iría la lógica de envío del formulario
+            console.log('Formulario válido, listo para enviar');
+        }
+    });
+
+    form.querySelectorAll('input, textarea').forEach(field => {
+        field.addEventListener('blur', () => validateField(field));
+        field.addEventListener('input', debounce(() => validateField(field), 300));
+    });
 }
 
 // Menú hamburguesa
@@ -532,52 +589,55 @@ function createMenuParticles() {
     }
 }
 
+// Scroll handler para el navbar
+function initScrollHeader() {
+    const header = document.querySelector('.header');
+    let lastScroll = 0;
+    let isScrolled = false;
+
+    // Aplicar clase scrolled al cargar si no estamos al inicio
+    if (window.scrollY > 0) {
+        header.classList.add('scrolled');
+        isScrolled = true;
+    }
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.scrollY;
+        
+        if (currentScroll > 0 && !isScrolled) {
+            header.classList.add('scrolled');
+            isScrolled = true;
+        } else if (currentScroll === 0 && isScrolled) {
+            header.classList.remove('scrolled');
+            isScrolled = false;
+        }
+
+        lastScroll = currentScroll;
+    });
+}
+
 // Función principal de inicialización
 function initAll() {
-    console.log('Iniciando todas las funcionalidades...');
-    
-    try {
-        // 1. Cursor
-        initCursor();
-        console.log('✓ Cursor inicializado');
-        
-        // 2. Partículas
-        createParticlesBG();
-        console.log('✓ Partículas inicializadas');
-        
-        // 3. SplitText
-        initSplitText();
-        console.log('✓ SplitText inicializado');
-        
-        // 4. Animaciones básicas
-        initAnimations();
-        console.log('✓ Animaciones básicas inicializadas');
-        
-        // 5. ScrollTrigger
-        initScrollAnimations();
-        console.log('✓ ScrollTrigger inicializado');
-        
-        // 6. Barras de progreso
-        initProgressBars();
-        console.log('✓ Barras de progreso inicializadas');
-        
-        // 7. Botón volver arriba
-        initBackToTop();
-        console.log('✓ Botón volver arriba inicializado');
-        
-        // 8. Formulario
-        initForm();
-        console.log('✓ Formulario inicializado');
-        
-        // 9. Menú hamburguesa
-        initHamburgerMenu();
-        console.log('✓ Menú hamburguesa inicializado');
-        
-        console.log('¡Todas las funcionalidades inicializadas correctamente!');
-        
-    } catch (error) {
-        console.error('Error durante la inicialización:', error);
-    }
+    const features = [
+        { fn: initCursor, id: 'cursor' },
+        { fn: createParticlesBG, id: 'particles' },
+        { fn: initSplitText, id: 'splitText' },
+        { fn: initAnimations, id: 'animations' },
+        { fn: initScrollAnimations, id: 'scrollAnimations' },
+        { fn: initProgressBars, id: 'progressBars' },
+        { fn: initBackToTop, id: 'backToTop' },
+        { fn: initForm, id: 'form' },
+        { fn: initHamburgerMenu, id: 'menu' },
+        { fn: initScrollHeader, id: 'header' }
+    ];
+
+    features.forEach(({ fn, id }) => {
+        try {
+            fn();
+        } catch (error) {
+            console.error(`Error al inicializar ${id}:`, error);
+        }
+    });
 }
 
 // Esperar a que el DOM esté listo
