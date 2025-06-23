@@ -14,6 +14,7 @@ waitForGSAP().then(() => {
     gsap.registerPlugin(ScrollTrigger, SplitText);
     console.log('GSAP plugins registrados');
     initAll();
+    initTextAnimation();
 }).catch(error => {
     console.error('Error al cargar GSAP:', error);
 });
@@ -339,9 +340,12 @@ function initProgressBars() {
 
 // Botón volver arriba
 function initBackToTop() {
-    const backToTop = document.querySelector('.back-to-top');
+    const backToTop = document.getElementById('back-to-top');
 
     if (backToTop) {
+        console.log('Botón back-to-top encontrado');
+        
+        // Mostrar/ocultar botón según scroll
         window.addEventListener('scroll', () => {
             if (window.scrollY > 500) {
                 backToTop.classList.add('visible');
@@ -350,12 +354,19 @@ function initBackToTop() {
             }
         });
 
-        backToTop.addEventListener('click', () => {
+        // Función para volver arriba
+        backToTop.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('Botón back-to-top clickeado');
+            
+            // Usar método nativo para mayor compatibilidad
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
         });
+    } else {
+        console.warn('Botón back-to-top no encontrado');
     }
 }
 
@@ -430,7 +441,7 @@ function initHamburgerMenu() {
         // Animación de entrada con GSAP
         gsap.fromTo(fullscreenMenu, 
             { 
-                scale: 0.8, 
+                scale: 1, 
                 rotation: -5,
                 opacity: 0 
             },
@@ -470,8 +481,8 @@ function initHamburgerMenu() {
         
         // Animación de salida
         gsap.to(fullscreenMenu, {
-            scale: 0.8,
-            rotation: 5,
+            scale: 1,
+            rotation: 0,
             opacity: 0,
             duration: 0.4,
             ease: "back.in(1.7)",
@@ -551,7 +562,7 @@ function createMenuParticles() {
             position: absolute;
             width: ${Math.random() * 4 + 2}px;
             height: ${Math.random() * 4 + 2}px;
-            background: rgba(108, 99, 255, ${Math.random() * 0.5 + 0.2});
+            background: rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2});
             border-radius: 50%;
             left: ${Math.random() * 100}%;
             top: ${Math.random() * 100}%;
@@ -594,6 +605,7 @@ function initScrollHeader() {
     const header = document.querySelector('.header');
     let lastScroll = 0;
     let isScrolled = false;
+    let isHidden = false;
 
     // Aplicar clase scrolled al cargar si no estamos al inicio
     if (window.scrollY > 0) {
@@ -604,6 +616,26 @@ function initScrollHeader() {
     window.addEventListener('scroll', () => {
         const currentScroll = window.scrollY;
         
+        // Lógica para mostrar/ocultar navbar
+        if (currentScroll > lastScroll && currentScroll > 100 && !isHidden) {
+            // Scroll hacia abajo - ocultar navbar
+            gsap.to(header, {
+                y: '-100%',
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+            isHidden = true;
+        } else if (currentScroll < lastScroll && isHidden) {
+            // Scroll hacia arriba - mostrar navbar
+            gsap.to(header, {
+                y: '0%',
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+            isHidden = false;
+        }
+        
+        // Lógica para el efecto scrolled
         if (currentScroll > 0 && !isScrolled) {
             header.classList.add('scrolled');
             isScrolled = true;
@@ -613,6 +645,61 @@ function initScrollHeader() {
         }
 
         lastScroll = currentScroll;
+    });
+}
+
+// Función específica para la animación del about
+function initAboutAnimation() {
+    console.log('Iniciando animación del about...');
+    
+    // Verificar que el elemento existe
+    const aboutElement = document.querySelector('.about');
+    if (!aboutElement) {
+        console.warn('Elemento .about no encontrado');
+        return;
+    }
+
+    console.log('Elemento .about encontrado:', aboutElement);
+
+    // Crear la animación del about
+    gsap.to(".about", {
+        scale: 1.1, // Escalar de 1 (tamaño normal) a 1.2 (20% más grande)
+        ease: "none",
+        scrollTrigger: {
+            trigger: ".about",
+            start: "top center", // Empezará cuando el elemento esté en el centro
+            end: "bottom center",
+            scrub: 1,
+            // markers: true, // Temporalmente activado para debug
+            onEnter: () => console.log("ScrollTrigger activado para about"),
+            onLeave: () => console.log("ScrollTrigger desactivado para about")
+        }
+    });
+    gsap.to(".circle-container", {
+        scale: 2, // Escalar de 1 (tamaño normal) a 1.2 (20% más grande)
+        ease: "none",
+        scrollTrigger: {
+            trigger: ".circle-container",
+            start: "top center", // Empezará cuando el elemento esté en el centro
+            end: "bottom center",
+            scrub: 5,
+            // markers: true, // Temporalmente activado para debug
+            onEnter: () => console.log("ScrollTrigger activado para about"),
+            onLeave: () => console.log("ScrollTrigger desactivado para about")
+        }
+    });
+    gsap.to(".skills-grid", {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        stagger: 0.05,
+        ease: "power2.out",
+        scrollTrigger: {
+            trigger: ".skills-grid",
+            start: "top center",
+            end: "bottom center", 
+            scrub: 1
+        }
     });
 }
 
@@ -628,7 +715,9 @@ function initAll() {
         { fn: initBackToTop, id: 'backToTop' },
         { fn: initForm, id: 'form' },
         { fn: initHamburgerMenu, id: 'menu' },
-        { fn: initScrollHeader, id: 'header' }
+        { fn: initScrollHeader, id: 'header' },
+        { fn: initTextAnimation, id: 'textAnimation' },
+        { fn: initAboutAnimation, id: 'aboutAnimation' }
     ];
 
     features.forEach(({ fn, id }) => {
@@ -648,3 +737,97 @@ if (document.readyState === 'loading') {
     initAll();
 }
 
+// Animación de texto personalizada (sin SplitText)
+function initTextAnimation() {
+    console.log('Iniciando animación de texto personalizada...');
+    
+    // Verificar que el elemento existe
+    const splitElement = document.querySelector(".split-1");
+    if (!splitElement) {
+        console.warn("Elemento .split-1 no encontrado");
+        return;
+    }
+
+    console.log("Elemento .split-1 encontrado:", splitElement);
+
+    // Esperar un poco para asegurar que todo esté listo
+    setTimeout(() => {
+        try {
+            // Función para dividir texto en palabras
+            function splitTextIntoWords(element) {
+                const text = element.textContent;
+                const words = text.split(' ');
+                
+                // Limpiar el contenido
+                element.innerHTML = '';
+                
+                // Crear spans para cada palabra y espacio
+                const allElements = [];
+                
+                words.forEach((word, index) => {
+                    const wordSpan = document.createElement('span');
+                    wordSpan.textContent = word;
+                    wordSpan.className = 'animated-word';
+                    wordSpan.style.display = 'inline-block';
+                    wordSpan.style.opacity = '0';
+                    wordSpan.style.transform = 'translateY(100%)';
+                    element.appendChild(wordSpan);
+                    allElements.push(wordSpan);
+                    
+                    // Agregar espacio después de cada palabra (excepto la última)
+                    if (index < words.length - 1) {
+                        const spaceSpan = document.createElement('span');
+                        spaceSpan.textContent = ' ';
+                        spaceSpan.className = 'word-space';
+                        spaceSpan.style.display = 'inline-block';
+                        spaceSpan.style.opacity = '0';
+                        spaceSpan.style.transform = 'translateY(100%)';
+                        element.appendChild(spaceSpan);
+                        allElements.push(spaceSpan);
+                    }
+                });
+                
+                return allElements;
+            }
+
+            // Dividir texto en palabras
+            const paragraphs = splitElement.querySelectorAll('p');
+            const allElements = [];
+            
+            paragraphs.forEach(paragraph => {
+                const elements = splitTextIntoWords(paragraph);
+                allElements.push(...elements);
+            });
+
+            if (allElements.length === 0) {
+                console.warn("No se encontraron elementos para animar");
+                return;
+            }
+
+            console.log("Elementos encontrados:", allElements.length);
+
+            // Crear animación con ScrollTrigger
+            const animation = gsap.to(allElements, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.05,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: ".split-1",
+                    start: "top 80%",
+                    end: "bottom 20%",
+                    toggleActions: "play none none reverse",
+                    markers: false,
+                    onEnter: () => console.log("ScrollTrigger activado para texto"),
+                    onLeave: () => console.log("ScrollTrigger desactivado para texto")
+                }
+            });
+
+            console.log("Animación de texto creada:", animation);
+
+        } catch (error) {
+            console.error("Error al crear animación de texto:", error);
+        }
+    }, 2000);
+}

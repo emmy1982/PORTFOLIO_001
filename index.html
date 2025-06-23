@@ -19,6 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -37,7 +38,7 @@
     <!-- Header -->
     <header class="header">
         <nav class="nav" aria-label="Navegación principal">
-            <div class="logo" role="banner">Emilio Mochón</div>
+            <div class="logo" role="banner">Portfolio</div>
             <ul class="nav-links" role="navigation">
                 <li><a href="#home" aria-current="page">Home</a></li>
                 <li><a href="#about">Sobre mí</a></li>
@@ -131,23 +132,40 @@
     <section id="about" class="about">
         <div class="container">
             <h2 class="section-title">Sobre mí</h2>
+            <p class="about-subtitle">Conóceme un poco más</p>
             <div class="about-content">
                 <div class="about-image">
-                    <img src="assets/profile.jpg" alt="Profile Image" width="400" height="400" loading="lazy">
+                    <img src="./assets/imagen.png" alt="Profile Image" width="400" height="400" loading="lazy">
                 </div>
-                <div class="about-text">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    <div class="about-stats">
-                        <div class="stat">
-                            <span class="number">3+</span>
-                            <span class="label">Años de experiencia</span>
-                        </div>
-                        <div class="stat">
-                            <span class="number">50+</span>
-                            <span class="label">Proyectos completados</span>
-                        </div>
-                    </div>
+                <div class="about-text split-1">
+                    <p>Soy un desarrollador web apasionado por crear experiencias digitales únicas. Con más de X años de experiencia, me especializo en desarrollar sitios web modernos, responsivos y con un enfoque en la experiencia del usuario.</p>
+                    <p>Mi objetivo es transformar ideas en realidades digitales que no solo se vean increíbles, sino que también funcionen de manera excepcional.</p>
+                </div>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <i class="fab fa-html5"></i>
+                    <span>HTML5</span>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-css3-alt"></i>
+                    <span>CSS3</span>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-js-square"></i>
+                    <span>JavaScript</span>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-php"></i>
+                    <span>PHP</span>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-wordpress"></i>
+                    <span>WordPress</span>
+                </div>
+                <div class="skill-item">
+                    <i class="fab fa-bootstrap"></i>
+                    <span>Bootstrap</span>
                 </div>
             </div>
         </div>
@@ -160,45 +178,29 @@
             <div class="projects-grid">
                 <div class="project-card">
                     <div class="project-image">
-                        <img src="assets/project1.jpg" alt="Project 1" width="300" height="200" loading="lazy">
+                        <img src="./assets/webArquitectura.png" alt="Project 1" width="300" height="200" loading="lazy">
                     </div>
                     <div class="project-info">
-                        <h3>Proyecto 1</h3>
-                        <p>Descripción del proyecto 1</p>
+                        <h3>Empresa de Arquitectura y Diseño</h3>
+                        <p>Diseño de una web para una empresa de arquitectura, con un diseño moderno y responsive.</p>
                         <div class="project-tags">
-                            <span>HTML</span>
-                            <span>CSS</span>
-                            <span>JavaScript</span>
+                            <span>HTML5 /CSS3 /JavaScript</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="./assets/clinicaDental.png" alt="Project 2" width="300" height="200" loading="lazy">
+                    </div>
+                    <div class="project-info">
+                        <h3>Clínica Dental</h3>
+                        <p>Web para una clínica dental, con base de datos y funcionalidades PHP.</p>
+                        <div class="project-tags">
+                            <span>HTML5 /CSS3 /JavaScript /PHP/MySQL</span>
                         </div>
                     </div>
                 </div>
                 <!-- Más project cards aquí -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="skills">
-        <div class="container">
-            <h2 class="section-title">Habilidades</h2>
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <div class="skill-info">
-                        <h3>HTML/CSS</h3>
-                        <div class="progress-bar">
-                            <div class="progress" data-progress="90"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-info">
-                        <h3>JavaScript</h3>
-                        <div class="progress-bar">
-                            <div class="progress" data-progress="85"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Más skill cards aquí -->
             </div>
         </div>
     </section>
@@ -235,9 +237,13 @@
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path>
         </svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path>
+        </svg>
     </button>
 
     <!-- Custom JS -->
     <script src="js/main.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
