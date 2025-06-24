@@ -416,6 +416,49 @@ body {
     transform: translateY(-3px);
 }
 
+/* my-link */
+.my-link {
+    position: fixed;
+    top: 50%;
+    left: 2rem;
+    transform: translateY(-50%) rotate(180deg);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: opacity 0.4s ease;
+}
+
+.my-link:hover a, .my-link:hover .lateral-line {
+    color: var(--primary-color);
+    transform: translateY(-15px);
+    transition: var(--transition);
+}
+
+.my-link a {
+    text-decoration: none;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 100;
+    transition: var(--transition);
+   
+}
+
+.lateral-line{
+    width: 1px;
+    height: 100px;
+    background: white;
+    margin: 0 10px;
+    transition: var(--transition);
+}
+
+
 /* Home Section */
 .hero {
     height: 100vh;
@@ -840,7 +883,7 @@ body {
     border-top: 1px solid var(--text-color);
     max-width: 300px;
     padding-top: 32px;
-    margin-top: 10%;
+    margin-top: 5%;
     opacity: 0;
 }
 
@@ -902,7 +945,7 @@ body {
 .skills-grid {
     margin-top: 4rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 2rem;
     opacity: 0;
     transform: translateY(100px);
@@ -914,14 +957,14 @@ body {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 1.5rem;
     border-radius: 15px;
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.03);
+    /* background: rgba(255, 255, 255, 0.03); */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     position: relative;
@@ -929,7 +972,7 @@ body {
     cursor: pointer;
 }
 
-.skill-item::before {
+/* .skill-item::before {
     content: '';
     position: absolute;
     top: 0;
@@ -940,7 +983,7 @@ body {
     transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     z-index: -1;
     opacity: 0.9;
-}
+} */
 
 .skill-item::after {
     content: '';
@@ -956,12 +999,12 @@ body {
     z-index: -1;
 }
 
-.skill-item:hover {
+/* .skill-item:hover {
     transform: translateY(-8px) scale(1.05);
     border-color: var(--primary-color);
     box-shadow: 0 20px 60px rgba(255, 107, 51, 0.4);
     color: white;
-}
+} */
 
 .skill-item:hover::before {
     left: 0;
@@ -1039,43 +1082,25 @@ body {
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    gap: 1rem;
     width: 100%;
     justify-items: center;
 }
 
-/* Para pantallas grandes, usa 3 columnas fijas y centra todo */
+/* Para pantallas grandes, usa 2 columnas fijas y centra todo */
 @media (min-width: 1200px) {
     .projects-grid {
-        grid-template-columns: repeat(3, 1fr);
-        max-width: 1200px;
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 1000px;
         margin: 0 auto;
         justify-items: stretch;
-    }
-
-    /* Si hay 6 elementos, centrar los últimos 3 en su fila */
-    .project-card:nth-child(4) {
-        grid-column: 1;
-    }
-    .project-card:nth-child(5) {
-        grid-column: 2;
-    }
-    .project-card:nth-child(6) {
-        grid-column: 3;
-    }
-}
-
-/* Para elementos impares en la última fila */
-@media (min-width: 1200px) {
-    .projects-grid:has(.project-card:nth-child(7)) .project-card:nth-child(7) {
-        grid-column: 2; /* Centrar si solo hay 1 elemento en la nueva fila */
     }
 }
 
 /* Para pantallas muy grandes */
 @media (min-width: 1400px) {
     .projects-grid {
-        max-width: 1300px;
+        max-width: 1100px;
     }
 }
 
@@ -1093,35 +1118,96 @@ body {
     transform: translateY(-10px);
 }
 
+.project-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
 .project-image img {
     aspect-ratio: 3/2;
     object-fit: cover;
     width: 100%;
     height: auto;
     border-radius: 15px;
-    border: 2px solid var(--text-color);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    transition: all 0.4s ease;
+}
+
+.project-image:hover img {
+    transform: scale(1.05);
+    filter: brightness(0.7);
+}
+
+/* Overlay con tags en hover */
+.project-image .project-tags-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.845) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
+    padding: 2rem 1.5rem 1.5rem;
+    transform: translateY(100%);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    opacity: 0;
+    backdrop-filter: blur(1px);
+}
+
+.project-image:hover .project-tags-overlay {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.project-tags-overlay .project-tags {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.project-tags-overlay .project-tags span {
+    font-size: 0.85rem;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-weight: 400;
+}
+
+.project-tags-overlay .project-tags a {
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    padding: 0.5rem;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.project-tags-overlay .project-tags a:hover {
+    background: var(--primary-color);
+    transform: scale(1.1);
 }
 
 .project-info {
     padding: 2rem;
 }
 
-.project-info h3 {
+.project-tags-overlay .project-tags h3 {
     font-size: 1.5rem;
-    color: var(--text-color);
+    color: white;
     margin-bottom: 1rem;
     font-weight: 500;
 }
 
-.project-info p {
-    color: var(--text-color);
+.project-tags-overlay .project-tags p {
+    color: white;
     font-size: 1rem;
     line-height: 1.6;
     margin-bottom: 1rem;
-    opacity: 0.8;
 }
 
 .project-tags {
@@ -1129,6 +1215,11 @@ body {
     margin-top: 1rem;
     flex-wrap: wrap;
     gap: 0.5rem;
+}
+
+.project-tags a{
+    color: var(--text-color);
+    text-decoration: none;
 }
 
 .project-tags span {
@@ -1166,6 +1257,9 @@ body {
 .contact-info {
     align-self: center;
     height: fit-content;
+    border-top: 1px solid var(--text-color);
+    border-bottom: 1px solid var(--text-color);
+    padding-bottom: 3rem;
 }
 
 .contact-info p {
@@ -1417,6 +1511,18 @@ body {
 .back-to-top:hover svg {
     transform: translateY(-5px);
     fill: var(--primary-color);
+}
+
+/* Footer */    
+.footer-content {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Responsive Design */

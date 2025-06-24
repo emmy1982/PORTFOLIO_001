@@ -629,6 +629,60 @@ function initHamburgerMenu() {
     });
 }
 
+// Control de visibilidad del my-link
+function initMyLinkVisibility() {
+    const myLink = document.querySelector('.my-link');
+    if (!myLink) return;
+    
+    let ticking = false;
+
+    function updateMyLinkVisibility() {
+        const heroSection = document.querySelector('#home');
+        if (!heroSection) return;
+        
+        const heroHeight = heroSection.offsetHeight;
+        const currentScroll = window.scrollY;
+        
+        // Ocultar cuando salimos de la sección hero
+        if (currentScroll > heroHeight * 0.8) {
+            if (isGSAPLoaded) {
+                gsap.to(myLink, { 
+                    opacity: 0, 
+                    transform: 'translateY(-50%) translateX(-50px) rotate(180deg)',
+                    duration: 0.4, 
+                    ease: 'power2.out' 
+                });
+            } else {
+                myLink.style.opacity = '0';
+                myLink.style.transform = 'translateY(-50%) translateX(-50px) rotate(180deg)';
+            }
+        } else {
+            if (isGSAPLoaded) {
+                gsap.to(myLink, { 
+                    opacity: 1, 
+                    transform: 'translateY(-50%) translateX(0px) rotate(180deg)',
+                    duration: 0.4, 
+                    ease: 'power2.out' 
+                });
+            } else {
+                myLink.style.opacity = '1';
+                myLink.style.transform = 'translateY(-50%) translateX(0px) rotate(180deg)';
+            }
+        }
+
+        ticking = false;
+    }
+
+    function onScroll() {
+        if (!ticking) {
+            requestAnimationFrame(updateMyLinkVisibility);
+            ticking = true;
+        }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+}
+
 // Header scroll optimizado
 function initScrollHeader() {
     const header = document.querySelector('.header');
@@ -689,7 +743,8 @@ function initAll() {
         { fn: initForm, id: 'form' },
         { fn: initHamburgerMenu, id: 'menu' },
         { fn: initScrollHeader, id: 'header' },
-        { fn: initTextAnimation, id: 'textAnimation' }
+        { fn: initTextAnimation, id: 'textAnimation' },
+        { fn: initMyLinkVisibility, id: 'myLinkVisibility' }
     ];
 
     features.forEach(({ fn, id }) => {
