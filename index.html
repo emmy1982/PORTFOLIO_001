@@ -21,7 +21,10 @@
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js" defer></script>
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
+    <!-- Lottie Player -->
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
@@ -31,10 +34,9 @@
     <canvas id="bg-particles"></canvas>
     <!-- Cursor personalizado -->
     <div class="cursor"></div>
-    <div class="cursor-follower"></div>
     <div class="circle-container">
         <div class="circle_1"></div>
-        <div class="circle_2 "></div>
+        <div class="circle_2"></div>
         <div class="circle_3"></div>
         <div class="circle_4"></div>
     </div>
@@ -43,7 +45,7 @@
     <header class="header">
         <nav class="nav" aria-label="Navegación principal">
             <div class="logo" role="banner">Portfolio</div>
-            <ul class="nav-links" role="navigation">
+            <ul class="nav-links">
                 <li><a href="#home" aria-current="page">Home</a></li>
                 <li><a href="#about">Sobre mí</a></li>
                 <li><a href="#projects">Proyectos</a></li>
@@ -53,8 +55,8 @@
             <!-- Menú hamburguesa -->
             <div class="hamburger-menu">
                 <div class="social-links-up">
-                    <a href="#" class="social-link-u" aria-label="GitHub Profile">GitHub</a>
-                    <a href="#" class="social-link-u" aria-label="LinkedIn Profile">LinkedIn</a>
+                    <a href="https://github.com/emmy1982" target="_blank" rel="noopener noreferrer" class="social-link-u" aria-label="GitHub Profile">GitHub</a>
+                    <a href="https://www.linkedin.com/in/emilio-moch%C3%B3n-garc%C3%ADa-7000000000000000000/" target="_blank" rel="noopener noreferrer" class="social-link-u" aria-label="LinkedIn Profile">LinkedIn</a>
                 </div>
                 <button class="menu" aria-label="Abrir menú" aria-expanded="false"
                     aria-controls="fullscreen-menu">MENU</button>
@@ -92,15 +94,21 @@
                 </nav>
                 <div class="menu-footer">
                     <div class="social-links">
-                        <a href="#" class="social-link" aria-label="GitHub Profile">GitHub</a>
-                        <a href="#" class="social-link" aria-label="LinkedIn Profile">LinkedIn</a>
-                        <a href="#" class="social-link" aria-label="Twitter Profile">Twitter</a>
+                        <a href="https://www.linkedin.com/in/emilio-moch%C3%B3n-garc%C3%ADa-7000000000000000000/" target="_blank" rel="noopener noreferre   r">
+                            <i class="fa-brands fa-linkedin"></i>
+                        </a>
+                        <a href="https://github.com/emmy1982" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+                        <a href="https://www.instagram.com/emmyjose82/" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- link email -->
+        <!-- Link email -->
         <div class="my-link">
             <a href="mailto:emmyjose82@hotmail.com">emmyjose82@hotmail.com</a>
             <span class="lateral-line"></span>
@@ -141,15 +149,12 @@
                     </h2>
                 </div>
             </div>
-            <div class="scroll-indicator">
-                <!-- <div class="mouse"></div> -->
-                <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
-                    type="module"></script>
+            <a href="#about" class="scroll-indicator" aria-label="Scroll hacia la sección Sobre mí">
                 <dotlottie-player src="https://lottie.host/09601235-6858-410e-a712-f64f8dd746a0/TkN7I4znQ4.lottie"
                     background="transparent" speed="1" style="width: 80px; height: 80px" loop
                     autoplay></dotlottie-player>
                 <p>Scroll</p>
-            </div>
+            </a>
         </section>
 
         <!-- About Section -->
@@ -333,7 +338,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Más project cards aquí -->
                 </div>
             </div>
         </section>
@@ -402,9 +406,6 @@
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path>
             </svg>
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path>
-            </svg>
         </button>
     </main>
     <footer>
@@ -415,6 +416,8 @@
 
     <!-- Custom JS -->
     <script src="js/main.js"></script>
+    <script src="js/emailForm.js"></script>
+    <script src="js/scrollIndicator.js"></script>
 </body>
 
 </html>

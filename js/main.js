@@ -18,7 +18,6 @@ function waitForGSAP() {
 waitForGSAP().then(() => {
     gsap.registerPlugin(ScrollTrigger);
     isGSAPLoaded = true;
-    console.log('GSAP plugins registrados');
     
     // Configurar ScrollTrigger para responsive
     ScrollTrigger.config({
@@ -171,7 +170,7 @@ function initAnimations() {
     }, 1000);
 }
 
-// Animación de palabras cambiantes CORREGIDA
+// Animación de palabras cambiantes optimizada
 function initChangingWords() {
     const words = document.querySelectorAll('.word-item');
     if (!words.length || !isGSAPLoaded) return;
@@ -225,21 +224,17 @@ function initChangingWords() {
     wordsInterval = setInterval(changeWord, 3000);
 }
 
-// ScrollTrigger optimizado y corregido
+// ScrollTrigger optimizado
 function initScrollAnimations() {
     if (!isGSAPLoaded) return;
 
     // Limpiar ScrollTriggers existentes
     ScrollTrigger.getAll().forEach(trigger => trigger.kill());
 
-    // Animación para todos los títulos de sección
-    document.querySelectorAll('.section-title').forEach((title, index) => {
+    // Animación para títulos de sección
+    document.querySelectorAll('.section-title').forEach((title) => {
         gsap.fromTo(title, 
-            {
-                y: 50,
-                opacity: 0,
-                scale: 0.9
-            },
+            { y: 50, opacity: 0, scale: 0.9 },
             {
                 duration: 1.2,
                 ease: "power3.out",
@@ -250,21 +245,16 @@ function initScrollAnimations() {
                     trigger: title,
                     start: 'top 85%',
                     end: 'bottom 25%',
-                    toggleActions: 'play none none reverse',
-                    onEnter: () => console.log(`Título ${index + 1} animado: ${title.textContent}`)
+                    toggleActions: 'play none none reverse'
                 }
             }
         );
     });
 
-    // Animación para todos los subtítulos
-    document.querySelectorAll('.about-subtitle').forEach((subtitle, index) => {
+    // Animación para subtítulos
+    document.querySelectorAll('.about-subtitle').forEach((subtitle) => {
         gsap.fromTo(subtitle, 
-            {
-                y: 30,
-                opacity: 0,
-                scale: 0.95
-            },
+            { y: 30, opacity: 0, scale: 0.95 },
             {
                 duration: 1,
                 ease: "power3.out",
@@ -276,22 +266,17 @@ function initScrollAnimations() {
                     trigger: subtitle,
                     start: 'top 85%',
                     end: 'bottom 25%',
-                    toggleActions: 'play none none reverse',
-                    onEnter: () => console.log(`Subtítulo ${index + 1} animado: ${subtitle.textContent}`)
+                    toggleActions: 'play none none reverse'
                 }
             }
         );
     });
 
-    // Animación para contenedores de sección
-    document.querySelectorAll('.container').forEach((container, index) => {
-        // Solo animar contenedores que no están en el home
+    // Animación para contenedores
+    document.querySelectorAll('.container').forEach((container) => {
         if (!container.closest('#home')) {
             gsap.fromTo(container, 
-                {
-                    y: 20,
-                    opacity: 0.8
-                },
+                { y: 20, opacity: 0.8 },
                 {
                     duration: 1.5,
                     ease: "power2.out",
@@ -337,7 +322,7 @@ function initScrollAnimations() {
         ease: 'power3.out'
     });
 
-    // Projects - CORREGIDO para aparecer
+    // Projects
     gsap.to('.project-card', {
         scrollTrigger: {
             trigger: '.projects-grid',
@@ -366,7 +351,7 @@ function initScrollAnimations() {
         ease: 'power3.out'
     });
 
-    // About scale effect - FUNCIONAL
+    // About scale effect
     gsap.to('.about', {
         scale: 1.2,
         transformOrigin: 'center center',
@@ -375,16 +360,11 @@ function initScrollAnimations() {
             trigger: '.about',
             start: 'top 90%',
             end: 'bottom 10%',
-            scrub: 1,
-            markers: false,
-            onEnter: () => console.log('About scale animation started'),
-            onUpdate: (self) => {
-                console.log('Scale progress:', self.progress.toFixed(2));
-            }
+            scrub: 1
         }
     });
 
-    // Circle container effect - MEJORADO para no conflictuar
+    // Circle container effect
     if (window.innerWidth > 768) {
         gsap.fromTo('.circle-container', {
             transform: 'translateY(-50%) scale(1)'
@@ -395,21 +375,19 @@ function initScrollAnimations() {
                 trigger: '.about',
                 start: 'top 80%',
                 end: 'bottom 20%',
-                scrub: 2,
-                markers: false
+                scrub: 2
             }
         });
     }
 }
 
-// Animación de texto personalizada
+// Animación de texto optimizada
 function initTextAnimation() {
     if (!isGSAPLoaded) return;
     
     const splitElement = document.querySelector('.split-1');
     if (!splitElement) return;
 
-    // Esperar un momento para asegurar renderizado
     setTimeout(() => {
         try {
             function splitTextIntoWords(element) {
@@ -469,7 +447,7 @@ function initTextAnimation() {
     }, 1500);
 }
 
-// Botón volver arriba
+// Botón volver arriba optimizado
 function initBackToTop() {
     const backToTop = document.getElementById('back-to-top');
     if (!backToTop) return;
@@ -496,61 +474,13 @@ function initBackToTop() {
 
     backToTop.addEventListener('click', (e) => {
         e.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 }
 
-// Validación de formulario
+// Función placeholder para formulario (manejado por emailForm.js)
 function initForm() {
-    const form = document.getElementById('contact-form');
-    if (!form) return;
-
-    const validateField = (field) => {
-        const errorElement = field.parentElement.querySelector('.error-message');
-        if (!errorElement) return true;
-
-        let isValid = field.checkValidity();
-        let message = '';
-
-        if (!isValid) {
-            if (field.validity.valueMissing) {
-                message = 'Este campo es requerido';
-            } else if (field.validity.typeMismatch && field.type === 'email') {
-                message = 'Por favor, introduce un email válido';
-            } else if (field.validity.tooShort) {
-                message = `Mínimo ${field.minLength} caracteres`;
-            } else if (field.validity.patternMismatch && field.type === 'text') {
-                message = 'Solo se permiten letras y espacios';
-            }
-        }
-
-        errorElement.textContent = message;
-        field.setAttribute('aria-invalid', !isValid);
-        return isValid;
-    };
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const fields = form.querySelectorAll('input, textarea');
-        let isValid = true;
-        
-        fields.forEach(field => {
-            if (!validateField(field)) isValid = false;
-        });
-        
-        if (isValid) {
-            console.log('Formulario válido');
-            // Aquí iría la lógica de envío
-        }
-    });
-
-    form.querySelectorAll('input, textarea').forEach(field => {
-        field.addEventListener('blur', () => validateField(field));
-        field.addEventListener('input', debounce(() => validateField(field), 300));
-    });
+    // La funcionalidad del formulario se maneja en emailForm.js
 }
 
 // Menú hamburguesa optimizado
@@ -629,7 +559,7 @@ function initHamburgerMenu() {
     });
 }
 
-// Control de visibilidad del my-link
+// Control de visibilidad del my-link optimizado
 function initMyLinkVisibility() {
     const myLink = document.querySelector('.my-link');
     if (!myLink) return;
@@ -643,7 +573,6 @@ function initMyLinkVisibility() {
         const heroHeight = heroSection.offsetHeight;
         const currentScroll = window.scrollY;
         
-        // Ocultar cuando salimos de la sección hero
         if (currentScroll > heroHeight * 0.8) {
             if (isGSAPLoaded) {
                 gsap.to(myLink, { 
@@ -696,7 +625,6 @@ function initScrollHeader() {
     function updateHeader() {
         const currentScroll = window.scrollY;
         
-        // Mostrar/ocultar header
         if (currentScroll > lastScroll && currentScroll > 100 && !isHidden) {
             if (isGSAPLoaded) {
                 gsap.to(header, { y: '-100%', duration: 0.3, ease: 'power2.out' });
@@ -709,7 +637,6 @@ function initScrollHeader() {
             isHidden = false;
         }
         
-        // Efecto scrolled
         if (currentScroll > 0 && !isScrolled) {
             header.classList.add('scrolled');
             isScrolled = true;
@@ -731,6 +658,7 @@ function initScrollHeader() {
 
     window.addEventListener('scroll', onScroll, { passive: true });
 }
+
 
 // Función principal de inicialización
 function initAll() {
@@ -756,7 +684,7 @@ function initAll() {
     });
 }
 
-// Optimización para cambios de orientación y resize
+// Optimización para resize
 let resizeTimeout;
 window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
@@ -765,12 +693,10 @@ window.addEventListener('resize', () => {
             ScrollTrigger.refresh();
         }
         
-        // Reinicializar cursor solo en desktop
         if (window.innerWidth >= 1024) {
             initCursor();
         }
         
-        // Limpiar y reinicializar palabras cambiantes
         if (wordsInterval) {
             clearInterval(wordsInterval);
         }
@@ -778,7 +704,7 @@ window.addEventListener('resize', () => {
     }, 250);
 }, { passive: true });
 
-// Inicialización cuando el DOM esté listo
+// Inicialización
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         if (isGSAPLoaded) {

@@ -122,7 +122,7 @@ body {
 
 .nav-links a {
     text-decoration: none;
-    color: var(--bg-color);
+    color: var(--text-color);
     font-weight: 500;
     transition: var(--transition);
 }
@@ -165,6 +165,25 @@ body {
 
 .social-link-u:hover::before {
     width: 100%;
+}
+
+.menu-footer  {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+   
+}
+
+.menu-footer .social-links a:hover i {
+    color: var(--primary-color);
+}
+
+.menu-footer .social-links a i {
+    font-size: 1.8rem;
+    color: var(--text-color);
+    transition: all 0.3s ease;
 }
 
 .menu {
@@ -285,7 +304,7 @@ body {
 .menu-logo {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--bg-color);
+    color: var(--text-color);
     font-family: 'Anton', sans-serif;
     letter-spacing: 2px;
 }
@@ -306,7 +325,7 @@ body {
     position: absolute;
     width: 30px;
     height: 3px;
-    background: var(--bg-color);
+    background: var(--text-color);
     border-radius: 2px;
     transition: all 0.3s ease;
 }
@@ -360,7 +379,7 @@ body {
 .menu-link {
     font-size: 3rem;
     font-weight: 500;
-    color: var(--bg-color);
+    color: var(--text-color);
     text-decoration: none;
     position: relative;
     display: inline-block;
@@ -400,7 +419,7 @@ body {
 }
 
 .social-link {
-    color: var(--bg-color);
+    color: var(--text-color);
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -422,7 +441,6 @@ body {
     top: 50%;
     left: 2rem;
     transform: translateY(-50%) rotate(180deg);
-    color: white;
     padding: 10px 20px;
     border-radius: 5px;
     z-index: 1000;
@@ -433,6 +451,12 @@ body {
     justify-content: center;
     gap: 10px;
     transition: opacity 0.4s ease;
+}
+
+@media (max-width: 1024px) {
+    .my-link {
+        display: none;
+    }
 }
 
 .my-link:hover a, .my-link:hover .lateral-line {
@@ -686,7 +710,7 @@ body {
 .H1 {
     font-size: clamp(4rem, 8vw, 6rem);
     letter-spacing: -0.4rem;
-    color: var(--bg-color);
+    color: var(--text-color);
 }
 
 .words-animation {
@@ -854,6 +878,30 @@ body {
     transform: translateX(-50%);
     text-align: center;
     color: var(--text-color);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.scroll-indicator:hover {
+    transform: translateX(-50%) translateY(-5px);
+    color: var(--primary-color);
+}
+
+.scroll-indicator:hover dotlottie-player {
+    transform: scale(1.1);
+}
+
+.scroll-indicator p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
 /* About Section */
