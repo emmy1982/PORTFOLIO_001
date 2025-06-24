@@ -1549,6 +1549,8 @@ body {
     }
 
     .glitch {
+        width: 100%;
+        text-align: start;
         font-size: clamp(1.2rem, 3vw, 1.8rem);
     }
 
@@ -1564,7 +1566,7 @@ body {
         bottom: auto;
         right: auto;
         transform: none;
-        margin: 2rem auto 0;
+        margin: -4rem auto 0;
         max-width: 100%;
         padding: 0;
     }
