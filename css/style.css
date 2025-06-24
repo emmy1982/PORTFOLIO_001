@@ -1576,7 +1576,10 @@ body {
         right: -20%;
         top: 20%;
     }
-
+    
+    .about{
+        scale: 0.9!important;
+    }
     .about-content {
         grid-template-columns: 1fr;
     }
