@@ -968,8 +968,8 @@ body {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     filter: saturate(0);
     object-fit: cover;
-    object-position: top;
-    border: 2px solid var(--text-color);
+    /* object-position: top; */
+    /* border: 2px solid var(--text-color); */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -1075,6 +1075,18 @@ body {
     transform: scale(1.05);
     transition: all 0.3s ease;
 }
+
+.skill-item img {
+    width: 28px;
+    height: 28px;
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+}
+.skill-item img:hover{
+    transform: scale(1.2);
+}
+
+
 
 .skill-item:active {
     transform: translateY(-6px) scale(1.02);
