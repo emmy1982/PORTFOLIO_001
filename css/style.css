@@ -963,16 +963,15 @@ body {
 
 .about-image img {
     width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    filter: saturate(0);
+    height: 405px;
+    border-bottom-left-radius: 35px;
+    border-bottom-right-radius: 35px;
+    filter: grayscale(40%);
     object-fit: cover;
-    /* object-position: top; */
-    /* border: 2px solid var(--text-color); */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    /* box-shadow: 8px 8px 5px rgba(204, 204, 204, 0.166); */
+    position: relative;
+    background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.4), rgba(0,0,0,0.7), rgba(33, 33, 33, 0.9), #303030);
+  
 }
 
 .about-text {
