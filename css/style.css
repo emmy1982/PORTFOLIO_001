@@ -1584,6 +1584,8 @@ body {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .hero {
@@ -1816,6 +1818,11 @@ body {
     .form-group label {
         left: 1rem;
         top: 1.3rem;
+    }
+
+    .footer-content p{
+        padding: 0 15px;
+        text-align: center;
     }
 }
 
