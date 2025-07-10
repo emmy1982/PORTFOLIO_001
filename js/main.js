@@ -298,13 +298,13 @@ function initScrollAnimations() {
     gsap.from('.about-image', {
         scrollTrigger: {
             trigger: '.about',
-            start: 'top 75%',
+            start: 'top 50%',
             end: 'bottom 25%',
             toggleActions: 'play none none reverse'
         },
         x: -80,
         opacity: 0,
-        duration: 1.2,
+        duration: 1.5,
         ease: 'power3.out'
     });
 
@@ -317,7 +317,7 @@ function initScrollAnimations() {
         },
         x: 80,
         opacity: 0,
-        duration: 1.2,
+        duration: 1.5,
         delay: 0.3,
         ease: 'power3.out'
     });
@@ -352,17 +352,17 @@ function initScrollAnimations() {
     });
 
     // About scale effect
-    gsap.to('.about', {
-        scale: 1.2,
-        transformOrigin: 'center center',
-        ease: 'none',
-        scrollTrigger: {
-            trigger: '.about',
-            start: 'top 90%',
-            end: 'bottom 10%',
-            scrub: 1
-        }
-    });
+    // gsap.to('.about', {
+    //     scale: 1.2,
+    //     transformOrigin: 'center center',
+    //     ease: 'none',
+    //     scrollTrigger: {
+    //         trigger: '.about',
+    //         start: 'top 90%',
+    //         end: 'bottom 10%',
+    //         scrub: 1
+    //     }
+    // });
 
     // Circle container effect
     if (window.innerWidth > 768) {
