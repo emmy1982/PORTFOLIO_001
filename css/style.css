@@ -196,6 +196,11 @@ body {
     margin-left: 3rem;
     background: transparent;
     border: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.menu:hover {
+    transform: scale(1.05);
 }
 
 .social-link-u {
