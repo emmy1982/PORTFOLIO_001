@@ -49,6 +49,51 @@ body {
     min-height: 100vh;
 }
 
+/* Estado inicial para animaciones del hero */
+.home-content {
+    opacity: 0;
+    transform: translateX(-100px);
+    animation: slideInLeft 1s ease-out 1s forwards;
+}
+
+.home-content-2 {
+    opacity: 0;
+    transform: translateX(100px);
+    animation: slideInRight 1s ease-out 0.6s forwards;
+}
+
+@keyframes slideInLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Asegurar visibilidad de elementos críticos desde el inicio */
+.glitch,
+.words-animation,
+.section-title,
+.about-subtitle,
+.about-content {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+/* Asegurar que la primera palabra sea visible */
+.word-item:first-child {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
 /* Cursor personalizado */
 .cursor {
     width: 10px;
@@ -628,16 +673,14 @@ body {
     min-height: 500px;
     text-align: start;
     z-index: 2;
-    position: absolute;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
     border-bottom: 1px solid var(--text-color);
     padding-right: 1rem;
-    top: 50%;
-    right: 5%;
-    transform: translateY(-50%);
+    
+    
 }
 
 .arrow-call {
@@ -743,7 +786,7 @@ body {
 .word-item {
     position: absolute;
     opacity: 0;
-    top: 100%;
+    top: 0;
     left: 0;
     width: auto;
     min-width: fit-content;
@@ -757,11 +800,22 @@ body {
     padding: 0;
     transform-origin: left center;
     letter-spacing: -0.3rem;
+    z-index: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    visibility: hidden;
 }
 
 .word-item:first-child {
-    opacity: 1;
-    top: 0;
+    opacity: 1 !important;
+    z-index: 1;
+    visibility: visible !important;
+}
+
+/* Asegurar que solo la primera palabra sea visible desde el inicio */
+.word-item:not(:first-child) {
+    opacity: 0 !important;
+    z-index: 0;
+    visibility: hidden !important;
 }
 
 .cta-buttons {

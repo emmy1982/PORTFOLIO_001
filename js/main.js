@@ -1,7 +1,7 @@
 // Variables globales
 let isGSAPLoaded = false;
 let animations = [];
-let wordsInterval;
+let resourcesLoaded = false;
 
 // Esperar a que GSAP esté disponible
 function waitForGSAP() {
@@ -14,10 +14,22 @@ function waitForGSAP() {
     });
 }
 
+// Esperar a que todos los recursos críticos estén cargados
+function waitForResources() {
+    return new Promise((resolve) => {
+        if (document.readyState === 'complete') {
+            resolve();
+        } else {
+            window.addEventListener('load', resolve, { once: true });
+        }
+    });
+}
+
 // Registrar plugins cuando estén disponibles
-waitForGSAP().then(() => {
+Promise.all([waitForGSAP(), waitForResources()]).then(() => {
     gsap.registerPlugin(ScrollTrigger);
     isGSAPLoaded = true;
+    resourcesLoaded = true;
     
     // Configurar ScrollTrigger para responsive
     ScrollTrigger.config({
@@ -26,7 +38,10 @@ waitForGSAP().then(() => {
     
     initAll();
 }).catch(error => {
-    console.error('Error al cargar GSAP:', error);
+    console.error('Error al cargar recursos:', error);
+    // Fallback: inicializar sin GSAP
+    resourcesLoaded = true;
+    initAll();
 });
 
 // Utilidad de debounce
@@ -144,87 +159,7 @@ function createParticlesBG() {
     window.addEventListener('resize', debouncedResize, { passive: true });
 }
 
-// Animaciones básicas
-function initAnimations() {
-    if (!isGSAPLoaded) return;
-    
-    // Limpiar animaciones previas
-    animations.forEach(anim => anim.kill());
-    animations = [];
-
-    // Animación del título principal con delay
-    setTimeout(() => {
-        const glitchAnimation = gsap.from('.glitch', {
-            duration: 1.2,
-            y: 80,
-            opacity: 0,
-            ease: 'power3.out',
-            stagger: 0.15
-        });
-        animations.push(glitchAnimation);
-    }, 500);
-
-    // Animación de palabras cambiantes
-    setTimeout(() => {
-        initChangingWords();
-    }, 1000);
-}
-
-// Animación de palabras cambiantes optimizada
-function initChangingWords() {
-    const words = document.querySelectorAll('.word-item');
-    if (!words.length || !isGSAPLoaded) return;
-
-    // Limpiar intervalo anterior si existe
-    if (wordsInterval) {
-        clearInterval(wordsInterval);
-    }
-
-    let currentIndex = 0;
-
-    // Configuración inicial - solo mostrar la primera palabra
-    words.forEach((word, index) => {
-        if (index === 0) {
-            gsap.set(word, { opacity: 1, y: 0, position: 'absolute', top: '0%' });
-        } else {
-            gsap.set(word, { opacity: 0, y: 100, position: 'absolute', top: '0%' });
-        }
-    });
-
-    function changeWord() {
-        const currentWord = words[currentIndex];
-        const nextIndex = (currentIndex + 1) % words.length;
-        const nextWord = words[nextIndex];
-        
-        // Animación sincronizada
-        const tl = gsap.timeline();
-        
-        // Salida de la palabra actual
-        tl.to(currentWord, {
-            duration: 0.4,
-            opacity: 0,
-            y: -50,
-            ease: 'power2.in'
-        })
-        // Entrada de la siguiente palabra
-        .fromTo(nextWord, {
-            opacity: 0,
-            y: 50
-        }, {
-            duration: 0.6,
-            opacity: 1,
-            y: 0,
-            ease: 'power2.out'
-        }, 0.2);
-
-        currentIndex = nextIndex;
-    }
-
-    // Iniciar ciclo cada 3 segundos
-    wordsInterval = setInterval(changeWord, 3000);
-}
-
-// ScrollTrigger optimizado
+// ScrollTrigger optimizado con mejor manejo de errores
 function initScrollAnimations() {
     if (!isGSAPLoaded) return;
 
@@ -294,83 +229,85 @@ function initScrollAnimations() {
         }
     });
 
-    // About section - Animaciones muy simples
-    gsap.from('.about-image', {
-        scrollTrigger: {
-            trigger: '.about',
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse'
-        },
-        opacity: 0,
-        x: -100,
-        duration: 1,
-        ease: 'power2.out'
-    });
-
-    gsap.from('.home-content-2', {
-        opacity: 0,
-        x: 100, 
-        duration: 1,
-        delay: 0.5,
-        ease: 'power2.out'
-    });
+    // About section - Animaciones específicas y directas
+    const aboutImage = document.querySelector('.about-image');
+    const aboutText = document.querySelector('.about-text');
     
-    gsap.from('.about-text', {
-        scrollTrigger: {
-            trigger: '.about',
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse'
-        },
-        opacity: 0,
-        x: 100,
-        duration:  1,
-        delay: 0.1,
-        ease: 'power2.out'
-    });
+    if (aboutImage) {
+        // Forzar estado inicial
+        gsap.set(aboutImage, { opacity: 0, x: -100 });
+        
+        gsap.to(aboutImage, 
+            {
+                scrollTrigger: {
+                    trigger: aboutImage,
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    toggleActions: 'play none none reverse'
+                },
+                opacity: 1,
+                x: 0,
+                duration: 1,
+                ease: 'power2.out'
+            }
+        );
+    }
+    
+    if (aboutText) {
+        // Forzar estado inicial
+        gsap.set(aboutText, { opacity: 0, x: 100 });
+        
+        gsap.to(aboutText, 
+            {
+                scrollTrigger: {
+                    trigger: aboutText,
+                    start: 'top 80%',
+                    end: 'bottom 20%',
+                    toggleActions: 'play none none reverse'
+                },
+                opacity: 1,
+                x: 0,
+                duration: 1,
+                delay: 0.2,
+                ease: 'power2.out'
+            }
+        );
+    }
 
     // Projects
-    gsap.to('.project-card', {
-        scrollTrigger: {
-            trigger: '.projects-grid',
-            start: 'top 80%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse'
-        },
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: 'power3.out'
-    });
+    gsap.fromTo('.project-card', 
+        { y: 50, opacity: 0 },
+        {
+            scrollTrigger: {
+                trigger: '.projects-grid',
+                start: 'top 80%',
+                end: 'bottom 20%',
+                toggleActions: 'play none none reverse'
+            },
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: 'power3.out'
+        }
+    );
 
     // Skills grid
-    gsap.to('.skills-grid', {
-        scrollTrigger: {
-            trigger: '.skills-grid',
-            start: 'top 75%',
-            end: 'bottom 25%',
-            toggleActions: 'play none none reverse'
-        },
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        ease: 'power3.out'
-    });
-
-    // About scale effect
-    // gsap.to('.about', {
-    //     scale: 1.2,
-    //     transformOrigin: 'center center',
-    //     ease: 'none',
-    //     scrollTrigger: {
-    //         trigger: '.about',
-    //         start: 'top 90%',
-    //         end: 'bottom 10%',
-    //         scrub: 1
-    //     }
-    // });
+    gsap.fromTo('.skills-grid', 
+        { opacity: 0, y: 100 },
+        {
+            scrollTrigger: {
+                trigger: '.skills-grid',
+                start: 'top 75%',
+                end: 'bottom 25%',
+                toggleActions: 'play none none reverse'
+            },
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            ease: 'power3.out'
+        }
+    );
 
     // Circle container effect
     if (window.innerWidth > 768) {
@@ -388,72 +325,6 @@ function initScrollAnimations() {
         });
     }
 }
-
-// Animación de texto optimizada - DESACTIVADA
-// function initTextAnimation() {
-//     if (!isGSAPLoaded) return;
-    
-//     const splitElement = document.querySelector('.split-1');
-//     if (!splitElement) return;
-
-//     setTimeout(() => {
-//         try {
-//             function splitTextIntoWords(element) {
-//                 const text = element.textContent;
-//                 const words = text.split(' ');
-                
-//                 element.innerHTML = '';
-//                 const allElements = [];
-                
-//                 words.forEach((word, index) => {
-//                     const wordSpan = document.createElement('span');
-//                     wordSpan.textContent = word;
-//                     wordSpan.className = 'animated-word';
-//                     wordSpan.style.cssText = 'display: inline-block; opacity: 0; transform: translateY(50px);';
-//                     element.appendChild(wordSpan);
-//                     allElements.push(wordSpan);
-                    
-//                     if (index < words.length - 1) {
-//                         const spaceSpan = document.createElement('span');
-//                         spaceSpan.textContent = ' ';
-//                         spaceSpan.className = 'word-space';
-//                         spaceSpan.style.cssText = 'display: inline-block; opacity: 0; transform: translateY(50px);';
-//                         element.appendChild(spaceSpan);
-//                         allElements.push(spaceSpan);
-//                     }
-//                 });
-                
-//                 return allElements;
-//             }
-
-//             const paragraphs = splitElement.querySelectorAll('p');
-//             const allElements = [];
-            
-//             paragraphs.forEach(paragraph => {
-//                 const elements = splitTextIntoWords(paragraph);
-//                 allElements.push(...elements);
-//             });
-
-//             if (allElements.length > 0) {
-//                 gsap.to(allElements, {
-//                     opacity: 1,
-//                     y: 0,
-//                     duration: 0.6,
-//                     stagger: 0.03,
-//                     ease: 'power3.out',
-//                     scrollTrigger: {
-//                         trigger: '.split-1',
-//                         start: 'top 85%',
-//                         end: 'bottom 15%',
-//                         toggleActions: 'play none none reverse'
-//                     }
-//                 });
-//             }
-//         } catch (error) {
-//             console.error('Error en animación de texto:', error);
-//         }
-//     }, 1500);
-// }
 
 // Botón volver arriba optimizado
 function initBackToTop() {
@@ -667,19 +538,16 @@ function initScrollHeader() {
     window.addEventListener('scroll', onScroll, { passive: true });
 }
 
-
 // Función principal de inicialización
 function initAll() {
     const features = [
         { fn: initCursor, id: 'cursor' },
         { fn: createParticlesBG, id: 'particles' },
-        { fn: initAnimations, id: 'animations' },
         { fn: initScrollAnimations, id: 'scrollAnimations' },
         { fn: initBackToTop, id: 'backToTop' },
         { fn: initForm, id: 'form' },
         { fn: initHamburgerMenu, id: 'menu' },
         { fn: initScrollHeader, id: 'header' },
-        // { fn: initTextAnimation, id: 'textAnimation' }, // DESACTIVADA
         { fn: initMyLinkVisibility, id: 'myLinkVisibility' }
     ];
 
@@ -690,6 +558,13 @@ function initAll() {
             console.error(`Error al inicializar ${id}:`, error);
         }
     });
+    
+    // Refrescar ScrollTrigger después de que todo esté inicializado
+    if (isGSAPLoaded && resourcesLoaded) {
+        setTimeout(() => {
+            ScrollTrigger.refresh();
+        }, 100);
+    }
 }
 
 // Optimización para resize
@@ -704,21 +579,45 @@ window.addEventListener('resize', () => {
         if (window.innerWidth >= 1024) {
             initCursor();
         }
-        
-        if (wordsInterval) {
-            clearInterval(wordsInterval);
-        }
-        initChangingWords();
     }, 250);
 }, { passive: true });
 
-// Inicialización
+// Inicialización mejorada
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        if (isGSAPLoaded) {
+        // Para dispositivos móviles o conexiones lentas, usar un timeout más largo
+        const isMobile = window.innerWidth < 768;
+        const timeout = isMobile ? 2000 : 1000;
+        
+        if (isGSAPLoaded && resourcesLoaded) {
             initAll();
+        } else {
+            // Si GSAP no está disponible, al menos asegurar visibilidad
+            setTimeout(() => {
+                if (isGSAPLoaded && resourcesLoaded) {
+                    initAll();
+                } else {
+                    // Fallback final
+                    initAll();
+                }
+            }, timeout);
         }
     });
-} else if (isGSAPLoaded) {
-    initAll();
+} else {
+    // DOM ya está listo
+    const isMobile = window.innerWidth < 768;
+    const timeout = isMobile ? 2000 : 1000;
+    
+    if (isGSAPLoaded && resourcesLoaded) {
+        initAll();
+    } else {
+        setTimeout(() => {
+            if (isGSAPLoaded && resourcesLoaded) {
+                initAll();
+            } else {
+                // Fallback final
+                initAll();
+            }
+        }, timeout);
+    }
 }
