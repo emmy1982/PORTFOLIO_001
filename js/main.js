@@ -294,32 +294,40 @@ function initScrollAnimations() {
         }
     });
 
-    // About section
+    // About section - Animaciones muy simples
     gsap.from('.about-image', {
         scrollTrigger: {
             trigger: '.about',
-            start: 'top 50%',
-            end: 'bottom 25%',
+            start: 'top 80%',
+            end: 'bottom 20%',
             toggleActions: 'play none none reverse'
         },
-        x: -80,
         opacity: 0,
-        duration: 1.5,
-        ease: 'power3.out'
+        x: -100,
+        duration: 1,
+        ease: 'power2.out'
     });
 
+    gsap.from('.home-content-2', {
+        opacity: 0,
+        x: 100, 
+        duration: 1,
+        delay: 0.5,
+        ease: 'power2.out'
+    });
+    
     gsap.from('.about-text', {
         scrollTrigger: {
             trigger: '.about',
-            start: 'top 75%',
-            end: 'bottom 25%',
+            start: 'top 80%',
+            end: 'bottom 20%',
             toggleActions: 'play none none reverse'
         },
-        x: 80,
         opacity: 0,
-        duration: 1.5,
-        delay: 0.3,
-        ease: 'power3.out'
+        x: 100,
+        duration:  1,
+        delay: 0.1,
+        ease: 'power2.out'
     });
 
     // Projects
@@ -381,71 +389,71 @@ function initScrollAnimations() {
     }
 }
 
-// Animación de texto optimizada
-function initTextAnimation() {
-    if (!isGSAPLoaded) return;
+// Animación de texto optimizada - DESACTIVADA
+// function initTextAnimation() {
+//     if (!isGSAPLoaded) return;
     
-    const splitElement = document.querySelector('.split-1');
-    if (!splitElement) return;
+//     const splitElement = document.querySelector('.split-1');
+//     if (!splitElement) return;
 
-    setTimeout(() => {
-        try {
-            function splitTextIntoWords(element) {
-                const text = element.textContent;
-                const words = text.split(' ');
+//     setTimeout(() => {
+//         try {
+//             function splitTextIntoWords(element) {
+//                 const text = element.textContent;
+//                 const words = text.split(' ');
                 
-                element.innerHTML = '';
-                const allElements = [];
+//                 element.innerHTML = '';
+//                 const allElements = [];
                 
-                words.forEach((word, index) => {
-                    const wordSpan = document.createElement('span');
-                    wordSpan.textContent = word;
-                    wordSpan.className = 'animated-word';
-                    wordSpan.style.cssText = 'display: inline-block; opacity: 0; transform: translateY(50px);';
-                    element.appendChild(wordSpan);
-                    allElements.push(wordSpan);
+//                 words.forEach((word, index) => {
+//                     const wordSpan = document.createElement('span');
+//                     wordSpan.textContent = word;
+//                     wordSpan.className = 'animated-word';
+//                     wordSpan.style.cssText = 'display: inline-block; opacity: 0; transform: translateY(50px);';
+//                     element.appendChild(wordSpan);
+//                     allElements.push(wordSpan);
                     
-                    if (index < words.length - 1) {
-                        const spaceSpan = document.createElement('span');
-                        spaceSpan.textContent = ' ';
-                        spaceSpan.className = 'word-space';
-                        spaceSpan.style.cssText = 'display: inline-block; opacity: 0; transform: translateY(50px);';
-                        element.appendChild(spaceSpan);
-                        allElements.push(spaceSpan);
-                    }
-                });
+//                     if (index < words.length - 1) {
+//                         const spaceSpan = document.createElement('span');
+//                         spaceSpan.textContent = ' ';
+//                         spaceSpan.className = 'word-space';
+//                         spaceSpan.style.cssText = 'display: inline-block; opacity: 0; transform: translateY(50px);';
+//                         element.appendChild(spaceSpan);
+//                         allElements.push(spaceSpan);
+//                     }
+//                 });
                 
-                return allElements;
-            }
+//                 return allElements;
+//             }
 
-            const paragraphs = splitElement.querySelectorAll('p');
-            const allElements = [];
+//             const paragraphs = splitElement.querySelectorAll('p');
+//             const allElements = [];
             
-            paragraphs.forEach(paragraph => {
-                const elements = splitTextIntoWords(paragraph);
-                allElements.push(...elements);
-            });
+//             paragraphs.forEach(paragraph => {
+//                 const elements = splitTextIntoWords(paragraph);
+//                 allElements.push(...elements);
+//             });
 
-            if (allElements.length > 0) {
-                gsap.to(allElements, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.6,
-                    stagger: 0.03,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: '.split-1',
-                        start: 'top 85%',
-                        end: 'bottom 15%',
-                        toggleActions: 'play none none reverse'
-                    }
-                });
-            }
-        } catch (error) {
-            console.error('Error en animación de texto:', error);
-        }
-    }, 1500);
-}
+//             if (allElements.length > 0) {
+//                 gsap.to(allElements, {
+//                     opacity: 1,
+//                     y: 0,
+//                     duration: 0.6,
+//                     stagger: 0.03,
+//                     ease: 'power3.out',
+//                     scrollTrigger: {
+//                         trigger: '.split-1',
+//                         start: 'top 85%',
+//                         end: 'bottom 15%',
+//                         toggleActions: 'play none none reverse'
+//                     }
+//                 });
+//             }
+//         } catch (error) {
+//             console.error('Error en animación de texto:', error);
+//         }
+//     }, 1500);
+// }
 
 // Botón volver arriba optimizado
 function initBackToTop() {
@@ -573,12 +581,12 @@ function initMyLinkVisibility() {
         const heroHeight = heroSection.offsetHeight;
         const currentScroll = window.scrollY;
         
-        if (currentScroll > heroHeight * 0.8) {
+        if (currentScroll > heroHeight * 0.2) {
             if (isGSAPLoaded) {
                 gsap.to(myLink, { 
                     opacity: 0, 
                     transform: 'translateY(-50%) translateX(-50px) rotate(180deg)',
-                    duration: 0.4, 
+                    duration: 0.3, 
                     ease: 'power2.out' 
                 });
             } else {
@@ -590,7 +598,7 @@ function initMyLinkVisibility() {
                 gsap.to(myLink, { 
                     opacity: 1, 
                     transform: 'translateY(-50%) translateX(0px) rotate(180deg)',
-                    duration: 0.4, 
+                    duration: 0.3, 
                     ease: 'power2.out' 
                 });
             } else {
@@ -671,7 +679,7 @@ function initAll() {
         { fn: initForm, id: 'form' },
         { fn: initHamburgerMenu, id: 'menu' },
         { fn: initScrollHeader, id: 'header' },
-        { fn: initTextAnimation, id: 'textAnimation' },
+        // { fn: initTextAnimation, id: 'textAnimation' }, // DESACTIVADA
         { fn: initMyLinkVisibility, id: 'myLinkVisibility' }
     ];
 

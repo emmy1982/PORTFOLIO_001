@@ -33,6 +33,7 @@ html {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
+    position: relative;
 }
 
 body {
@@ -465,6 +466,12 @@ body {
         display: none;
     }
 }
+@media (max-width: 1400px) {
+    .my-link {
+        left: 0.5rem;
+    }
+}
+
 
 .my-link:hover a, .my-link:hover .lateral-line {
     color: var(--primary-color);
@@ -910,8 +917,8 @@ body {
     margin: 0 auto;
     padding: 100px 0;
     background: linear-gradient(to top, #000000, rgba(0,0,0,0.9), rgba(0,0,0,0.7), rgba(0,0,0,0.4), rgba(0,0,0,0));
-    transform-origin: center center;
-    /* Removido scale: 1; para permitir animaciones GSAP */
+    overflow: hidden;
+    position: relative;
 }
 
 .container {
@@ -919,6 +926,8 @@ body {
     margin: 0 auto;
     padding: 0 var(--container-padding);
     width: 100%;
+    overflow: hidden;
+    position: relative;
 }
 
 .section-title {
@@ -950,8 +959,7 @@ body {
 
 .about-content {
     display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 3rem;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
 }
 
@@ -1365,18 +1373,84 @@ body {
     width: 50px;
     height: 50px;
     background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color:var(--primary-color);
+    color: var(--text-color);
     text-decoration: none;
-    transition: var(--transition);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .social-link:hover {
-    background: var(--gradient-primary);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
     transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 107, 51, 0.3);
+}
+
+.social-link i {
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover i {
+    transform: scale(1.1);
+}
+
+/* Estilos específicos para WhatsApp */
+.social-link[href*="wa.me"]:hover {
+    background: #25D366;
+    border-color: #25D366;
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+}
+
+/* Estilos para el badge de LinkedIn */
+.LI-profile-badge {
+    display: inline-block;
+    margin: 0 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.LI-profile-badge:hover {
+    transform: scale(1.05);
+}
+
+.badge-base__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.badge-base__link:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 107, 51, 0.3);
+}
+
+.badge-base__link i {
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.badge-base__link:hover i {
+    transform: scale(1.1);
 }
 
 .contact-form {
@@ -1672,6 +1746,18 @@ body {
     :root {
         --container-padding: 1rem;
     }
+    
+    /* Ajustes para los botones sociales en móvil */
+    .badge-base__link,
+    .social-link {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .badge-base__link i,
+    .social-link i {
+        font-size: 1.3rem;
+    }
 
     .header {
         padding: 0;
@@ -1840,6 +1926,18 @@ body {
     .header {
         padding: 0;
     }
+    
+    /* Ajustes para los botones sociales en pantallas muy pequeñas */
+    .badge-base__link,
+    .social-link {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .badge-base__link i,
+    .social-link i {
+        font-size: 1.2rem;
+    }
 
     .nav {
         padding: 0.8rem;
@@ -1969,72 +2067,8 @@ section {
     display: block;
 }
 
-/* Estilos para animación de texto */
-.split {
-    opacity: 1;
-    color: var(--text-color);
-}
-
-.split-1 {
-    overflow: hidden;
-    position: relative;
-}
-
-.split-1 p {
-    overflow: hidden;
-    position: relative;
-    display: block;
-    margin-bottom: 1.5rem;
-}
-
-.animated-word {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(100%);
-    transition: all 0.3s ease;
-}
-
-.animated-word:hover {
-    color: var(--primary-color);
-    transform: scale(1.05);
-}
-
-.word-space {
-    display: inline-block;
-    opacity: 0;
-    transform: translateY(100%);
-    transition: all 0.3s ease;
-    white-space: pre;
-}
-
-.line {
-    overflow: hidden;
-    position: relative;
-    display: block;
-}
-
-.word {
-    display: inline-block;
-    transform: translateY(100%);
-    opacity: 0;
-}
-
-.char {
-    display: inline-block;
-    transform: translateY(100%);
-    opacity: 0;
-}
-
-.word:hover {
-    color: var(--primary-color);
-    transform: scale(1.1);
-    transition: all 0.3s ease;
-}
-
-.split .word {
-    opacity: 1;
-    transform: translateY(0);
-}
+/* Estilos para animación de texto - ELIMINADOS */
+/* Las clases de animación de texto han sido eliminadas para evitar problemas de scroll lateral */
 
 .fullscreen-menu.active ~ .header, .fullscreen-menu.active ~ header {
     opacity: 0;
