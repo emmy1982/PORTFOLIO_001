@@ -2,6 +2,25 @@
 let isGSAPLoaded = false;
 let animations = [];
 let resourcesLoaded = false;
+let loadingScreen = null;
+
+// Inicializar pantalla de carga
+function initLoadingScreen() {
+    // Cargar el script de la pantalla de carga
+    const script = document.createElement('script');
+    script.src = 'js/loading/loadingScreen.js';
+    script.onload = () => {
+        // Crear instancia de la pantalla de carga
+        loadingScreen = new LoadingScreen();
+        
+        // Escuchar el evento de carga completa
+        document.addEventListener('loadingComplete', () => {
+            // Inicializar la aplicación después de que termine la carga
+            initApplication();
+        });
+    };
+    document.head.appendChild(script);
+}
 
 // Esperar a que GSAP esté disponible
 function waitForGSAP() {
@@ -25,24 +44,29 @@ function waitForResources() {
     });
 }
 
-// Registrar plugins cuando estén disponibles
-Promise.all([waitForGSAP(), waitForResources()]).then(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    isGSAPLoaded = true;
-    resourcesLoaded = true;
-    
-    // Configurar ScrollTrigger para responsive
-    ScrollTrigger.config({
-        autoRefreshEvents: "visibilitychange,DOMContentLoaded,load,resize"
+// Inicializar la aplicación después de la carga
+function initApplication() {
+    Promise.all([waitForGSAP(), waitForResources()]).then(() => {
+        gsap.registerPlugin(ScrollTrigger);
+        isGSAPLoaded = true;
+        resourcesLoaded = true;
+        
+        // Configurar ScrollTrigger para responsive
+        ScrollTrigger.config({
+            autoRefreshEvents: "visibilitychange,DOMContentLoaded,load,resize"
+        });
+        
+        initAll();
+    }).catch(error => {
+        console.error('Error al cargar recursos:', error);
+        // Fallback: inicializar sin GSAP
+        resourcesLoaded = true;
+        initAll();
     });
-    
-    initAll();
-}).catch(error => {
-    console.error('Error al cargar recursos:', error);
-    // Fallback: inicializar sin GSAP
-    resourcesLoaded = true;
-    initAll();
-});
+}
+
+// Iniciar la aplicación
+initLoadingScreen();
 
 // Utilidad de debounce
 function debounce(func, wait) {

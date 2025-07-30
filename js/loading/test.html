@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Pantalla de Carga</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            background: #1a1a1a;
+            color: #bdbdbd;
+        }
+        .test-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .test-button {
+            background: #ff6b33;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        .test-button:hover {
+            background: #ff8f6b;
+            transform: translateY(-2px);
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-content">
+        <h1>Test - Pantalla de Carga</h1>
+        <p>Esta página permite probar la pantalla de carga de forma independiente.</p>
+        
+        <div class="status" id="status">
+            Estado: Listo para probar
+        </div>
+        
+        <button class="test-button" onclick="testLoadingScreen()">
+            Probar Pantalla de Carga
+        </button>
+        
+        <button class="test-button" onclick="resetTest()">
+            Reiniciar Test
+        </button>
+        
+        <div id="log" style="margin-top: 20px; text-align: left; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; max-height: 200px; overflow-y: auto;">
+            <strong>Log de eventos:</strong><br>
+            <div id="log-content"></div>
+        </div>
+    </div>
+
+    <script>
+        let loadingScreen = null;
+        let testCount = 0;
+
+        function log(message) {
+            const logContent = document.getElementById('log-content');
+            const timestamp = new Date().toLocaleTimeString();
+            logContent.innerHTML += `[${timestamp}] ${message}<br>`;
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+
+        function updateStatus(message) {
+            document.getElementById('status').textContent = `Estado: ${message}`;
+        }
+
+        function testLoadingScreen() {
+            testCount++;
+            log(`Iniciando test #${testCount}`);
+            updateStatus('Cargando pantalla de carga...');
+            
+            // Cargar el script de la pantalla de carga
+            const script = document.createElement('script');
+            script.src = 'loadingScreen.js';
+            script.onload = () => {
+                log('Script de pantalla de carga cargado');
+                
+                // Crear instancia
+                loadingScreen = new LoadingScreen();
+                log('Instancia de pantalla de carga creada');
+                
+                // Escuchar eventos
+                document.addEventListener('loadingComplete', () => {
+                    log('✅ Evento loadingComplete disparado');
+                    updateStatus('Carga completada');
+                });
+                
+                updateStatus('Pantalla de carga activa');
+            };
+            
+            script.onerror = () => {
+                log('❌ Error al cargar el script');
+                updateStatus('Error al cargar script');
+            };
+            
+            document.head.appendChild(script);
+        }
+
+        function resetTest() {
+            if (loadingScreen) {
+                // Limpiar cualquier pantalla de carga existente
+                const existingScreen = document.querySelector('.loading-screen');
+                if (existingScreen) {
+                    existingScreen.remove();
+                }
+                loadingScreen = null;
+            }
+            
+            document.getElementById('log-content').innerHTML = '';
+            updateStatus('Listo para probar');
+            log('Test reiniciado');
+        }
+
+        // Log inicial
+        log('Página de test cargada');
+    </script>
+</body>
+</html> 
